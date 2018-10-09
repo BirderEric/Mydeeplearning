@@ -25,12 +25,12 @@ IMG_H = 32
 N_CLASSES = 10
 BATCH_SIZE = 128
 learning_rate = 0.01
-MAX_STEP = 15000
+MAX_STEP = 30000
 IS_PRETRAIN = True
 
 def mytrain():
     # pre_trained_weights = './VGG16_pretrain/vgg16.npy'
-    data_dir = '/home/birder/下载/'
+    data_dir = '/content/data/'
     train_log_dir = './logs2/train/'
     val_log_dir = './logs2/val/'
 
@@ -109,7 +109,7 @@ def mytrain():
 def train():
 
     # pre_trained_weights = './VGG16_pretrain/vgg16.npy'
-    data_dir = '/home/birder/下载/'
+    data_dir = '/content/data/'
     train_log_dir = './logs2/train/'
     val_log_dir = './logs2/val/'
 
@@ -188,7 +188,7 @@ def evaluate():
     with tf.Graph().as_default():
 
         log_dir = './logs2/train/'
-        test_dir = '/home/birder/下载/'
+        test_dir = '/content/data/'
         n_test = 10000
 
         test_iamge_batch, test_label_batch = input_data.read_cifar10(test_dir,

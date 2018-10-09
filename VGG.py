@@ -58,16 +58,16 @@ def Myvgg(x,n_class,is_pretrain=True):
         with tf.name_scope('pool2'):
             x = tools.pool('pool2', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
 
-        x = tools.conv('conv3_1', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
-        x = tools.conv('conv3_2', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x = tools.conv('conv3_1', x, 256, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x = tools.conv('conv3_2', x, 256, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
        # x = tools.conv('conv3_3', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
         with tf.name_scope('pool3'):
             x = tools.pool('pool3', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
 
-        x = tools.FC_layer('fc6', x, out_nodes=512)
+        x = tools.FC_layer('fc6', x, out_nodes=2048)
         with tf.name_scope('batch_norma1'):
             x = tools.batch_norm(x)     # batch norm can avoid overfit, more efficient than dropout
-        x = tools.FC_layer('fc7', x, out_nodes=512)
+        x = tools.FC_layer('fc7', x, out_nodes=2048)
         #x = tools.dropout(x,0.5)
         with tf.name_scope('batch_norm2'):
             x = tools.batch_norm(x)

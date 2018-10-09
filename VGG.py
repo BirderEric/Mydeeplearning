@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 import tools
 
@@ -44,4 +43,71 @@ def VGG16(x, n_class, is_pretrain=True):
             x = tools.batch_norm(x)
         x = tools.FC_layer('fc8', x, out_nodes=n_class)
 
-        return x
+    return x
+def Myvgg(x,n_class,is_pretrain=True):
+
+    with tf.name_scope('Myvgg'):
+
+        x = tools.conv('conv1_1', x, 64, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x = tools.conv('conv1_2', x, 64, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        with tf.name_scope('pool1'):
+            x = tools.pool('pool1', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x = tools.conv('conv2_1', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x = tools.conv('conv2_2', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        with tf.name_scope('pool2'):
+            x = tools.pool('pool2', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x = tools.conv('conv3_1', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x = tools.conv('conv3_2', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+       # x = tools.conv('conv3_3', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        with tf.name_scope('pool3'):
+            x = tools.pool('pool3', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x = tools.FC_layer('fc6', x, out_nodes=512)
+        with tf.name_scope('batch_norma1'):
+            x = tools.batch_norm(x)     # batch norm can avoid overfit, more efficient than dropout
+        x = tools.FC_layer('fc7', x, out_nodes=512)
+        #x = tools.dropout(x,0.5)
+        with tf.name_scope('batch_norm2'):
+            x = tools.batch_norm(x)
+        x = tools.FC_layer('fc8', x, out_nodes=n_class)
+
+    return x
+def MyResNet(x,n_class,is_pretrain=True):
+
+    with tf.name_scope('MyResNet'):
+
+        x1 = tools.conv('conv1_1', x, 64, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x2 = tools.conv_no_relu('conv1_2', x, 64, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x3 = tf.add(x1,x2)
+        x = tf.nn.relu(x3,name='relu')
+
+        with tf.name_scope('pool1'):
+            x = tools.pool('pool1', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x1 = tools.conv('conv2_1', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x2 = tools.conv_no_relu('conv2_2', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x3 = tf.add(x1,x2)
+        x = tf.nn.relu(x3, name='relu')
+        with tf.name_scope('pool2'):
+            x = tools.pool('pool2', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x1 = tools.conv('conv3_1', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x2 = tools.conv_no_relu('conv3_2', x, 256, kernel_size=[1, 1], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        x3 = tf.add(x1, x2)
+        x = tf.nn.relu(x3, name='relu')
+       # x = tools.conv('conv3_3', x, 128, kernel_size=[3, 3], stride=[1, 1, 1, 1], is_pretrain=is_pretrain)
+        with tf.name_scope('pool3'):
+            x = tools.pool('pool3', x, ksize=[1, 2, 2, 1], stride=[1, 2, 2, 1], is_max_pool=True)
+
+        x = tools.FC_layer('fc6', x, out_nodes=512)
+        with tf.name_scope('batch_norma1'):
+            x = tools.batch_norm(x)     # batch norm can avoid overfit, more efficient than dropout
+        x = tools.FC_layer('fc7', x, out_nodes=512)
+        #x = tools.dropout(x,0.5)
+        with tf.name_scope('batch_norm2'):
+            x = tools.batch_norm(x)
+        x = tools.FC_layer('fc8', x, out_nodes=n_class)
+
+    return x
